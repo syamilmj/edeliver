@@ -69,7 +69,9 @@ run() {
   __exec_if_defined "pre_erlang_update"
 
   [[ "$MODE" = "verbose" ]] && local _verbose="--verbose"
-  [[ $ARGS =~ "production" ]] && export DEPLOY_ENVIRONMENT="production" || export DEPLOY_ENVIRONMENT="staging"
+  if [[ -z "$DEPLOY_ENVIRONMENT" ]]; then
+    [[ $ARGS =~ "production" ]] && export DEPLOY_ENVIRONMENT="production" || export DEPLOY_ENVIRONMENT="staging"
+  fi
   # detect revision to install on build host
   local _branch_to_install="$BRANCH" _revision_to_install=$(git rev-parse --short "$BRANCH")
   [[ -z "$_branch_to_install" || -z "$_revision_to_install" ]] && error "Failed to detect branch or revision to install."
